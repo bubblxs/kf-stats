@@ -1,0 +1,25 @@
+{
+  "name": "kf_stats",
+  "version": "1.0.0",
+  "main": "./src/app.js",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon ./src/app.js",
+    "start": "node ./src/app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "compression": "^1.7.4",
+    "ejs": "^3.1.10",
+    "express": "^4.19.2",
+    "fast-xml-parser": "^4.4.1",
+    "helmet": "^7.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  }
+}
