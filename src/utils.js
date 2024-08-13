@@ -4,17 +4,19 @@ export const parseSteamId = (sid) => {
         return null;
     }
 
-    const steamUrlRegex = /((http|https):\/\/)?(steamcommunity.com\/)(id|profiles)(\/)(.*?)|(\/)(.*)/;
-    const steamU64Regex = /\b7656\d{13}\b/g;
-    const removeSpecialCharsRegex = /[^a-zA-Z0-9 ]/g;
-    const steamid = sid.replace(steamUrlRegex, "").replace(removeSpecialCharsRegex, "");
-    
-    if (steamid.length < 3) {
-        return null;
-    }
-    
+    let steamid = null;
+    const steamU64UrlRegex = /^((http|https):\/\/)?(steamcommunity.com\/)(profiles)(\/)\d{17}(\/)?$/gim;
+    const steamU64Regex = /^7656\d{13}$/gim;
+    const steamUrlRegex = /((http|https):\/\/)?(steamcommunity.com\/)(id|profiles)(\/)(.*?)|(\/)?/gim;
 
-    return steamU64Regex.test(steamid) ? `profiles/${steamid}` : `id/${steamid}`;
+    if (steamU64UrlRegex.test(sid) || steamU64Regex.test(sid)) {
+        steamid = `profiles/${sid.replace(steamUrlRegex, "").split("/")[0]}`;
+
+    } else {
+        steamid = `id/${sid.replace(steamUrlRegex, "").split("/")[0]}`;
+    }
+
+    return steamid;
 }
 
 export const sayIt = () => "no";
