@@ -62,3 +62,13 @@ h3 {
 footer {
     padding: 10px;
 }
+
+.error{
+    padding: 5px;
+    background-color: #ff5f5f6b;
+    border: solid 1px red;
+    text-align: center;
+    margin-block: 5px;
+    color: white;
+    font-weight: bold;
+}

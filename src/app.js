@@ -19,9 +19,9 @@ app.get("/", (req, res) => {
     res.render("index");
 });
 
-app.get("/:type(id|profiles)/:sid", (req, res) => {
+app.get("/player/:sid", (req, res) => {
     const { sid } = req.params ?? null;
-    const steamid = encodeURIComponent(parseSteamId(sid));
+    const steamid = parseSteamId(encodeURIComponent(sid));
 
     if (!steamid) {
         return res.status(400).render("error", { error: "bad request" });
