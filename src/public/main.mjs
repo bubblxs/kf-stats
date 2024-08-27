@@ -1,5 +1,5 @@
 const parseSteamId = (sid) => {
-    if (typeof sid !== "string") {
+    if (typeof sid !== "string" || sid.length < 3) {
         return null;
     }
 
@@ -34,18 +34,19 @@ window.addEventListener("DOMContentLoaded", () => {
 
         const steamid = parseSteamId(document.getElementsByClassName("steamid")[0].value);
 
-        if (!steamid || steamid.length < 3) {
+        if (!steamid) {
             const error = document.getElementsByClassName("error")[0];
 
             if (error) {
                 return;
             }
 
+            const table = document.getElementsByTagName("table")[0];
             const span = document.createElement("span");
             span.textContent = "invalid steamid";
             span.classList.add("error");
 
-            form.after(span);
+            table.after(span)
 
             setTimeout(() => {
                 span.remove();
@@ -54,5 +55,6 @@ window.addEventListener("DOMContentLoaded", () => {
         } else {
             window.location.href = `player/${steamid}`;
         }
-    })
+    });
+
 });

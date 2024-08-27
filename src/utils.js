@@ -1,5 +1,5 @@
 export const parseSteamId = (sid) => {
-    if (typeof sid !== "string") {
+    if (typeof sid !== "string" || sid.length < 3) {
         return null;
     }
 

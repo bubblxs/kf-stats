@@ -1,26 +1,88 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>kf stats - <%= steamID64 %></title>
+    <link rel="stylesheet" href="/static/profile.css">
+    <title>kf stats</title>
 </head>
+
 <body>
-    <%= steamID64 %> <br/>
-    <%= kills.total %> <br/>
-    <%= kills.headshot %> <br/>
-    <%= kills.stalker %> <br/>
-    <%= kills.bloat %> <br/>
-    <%= kills.siren %> <br/>
-    <%= damageHealed %> <br/>
-    <%= totalZedTime %> <br/>
-    <%= weldingPoints %> <br/>
-    <%= prestige.medic %> <br/>
-    <%= prestige.support %> <br/>
-    <%= prestige.sharpshooter %> <br/>
-    <%= prestige.commando %> <br/>
-    <%= prestige.berserker %> <br/>
-    <%= prestige.firebug %> <br/>
-    <%= prestige.demo %> <br/>
+    <%- include('partials/header.ejs') %>
+    <main>
+        <div>
+            <img src="/static/pfp.jpg" alt="player steam pfp">
+            <div>
+                <h2>player name</h2>
+                <span><%= steamID64 %></span>
+            </div>
+        </div>
+        <table>
+            <th colspan="2">player's stats</th>
+            <tr>
+                <td>kills</td>
+                <td><%= kills.total %></td>
+            </tr>
+            <tr>
+                <td>headshots</td>
+                <td><%= kills.headshot %></td>
+            </tr>
+            <tr>
+                <td>stalker kills</td>
+                <td><%= kills.stalker %></td>
+            </tr>
+            <tr>
+                <td>bloat kills</td>
+                <td><%= kills.bloat %></td>
+            </tr>
+            <tr>
+                <td>siren kills</td>
+                <td><%= kills.siren %></td>
+            </tr>
+            <tr>
+                <td>damage healed</td>
+                <td><%= damageHealed %></td>
+            </tr>
+            <tr>
+                <td>zed time</td>
+                <td><%= totalZedTime %></td>
+            </tr>
+            <tr>
+                <td>welding points</td>
+                <td><%= weldingPoints %></td>
+            </tr>
+            <tr>
+                <td>prestige medic</td>
+                <td><%= prestige.medic %> </td>
+            </tr>
+            <tr>
+                <td>prestige support</td>
+                <td><%= prestige.support %></td>
+            </tr>
+            <tr>
+                <td>prestige sharpshooter</td>
+                <td><%= prestige.sharpshooter %></td>
+            </tr>
+            <tr>
+                <td>prestige commando</td>
+                <td><%= prestige.commando %></td>
+            </tr>
+            <tr>
+                <td>prestige berserker</td>
+                <td><%= prestige.berserker %></td>
+            </tr>
+            <tr>
+                <td>prestige firebug</td>
+                <td><%= prestige.firebug %> </td>
+            </tr>
+            <tr>
+                <td>prestige demo</td>
+                <td> <%= prestige.demo %></td>
+            </tr>
+        </table>
+    </main>
+    <%- include('partials/footer.ejs') %>
 </body>
+
 </html>
