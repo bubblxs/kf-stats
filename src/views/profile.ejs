@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/static/profile.css">
+    <link rel="stylesheet" href="/static/styles/profile.css">
     <title>kf stats</title>
 </head>
 
@@ -12,21 +12,27 @@
     <%- include('partials/header.ejs') %>
     <main>
         <div>
-            <img src="/static/pfp.jpg" alt="player steam pfp">
             <div>
-                <h2>player name</h2>
-                <span><%= steamID64 %></span>
+                <% if (src.length > 1) { %>
+                    <img style="background-image: url(<%= src[1] %>)" src=<%= src[0] %> title="<%= personaName %>'s profile picture">
+                <%} else {%>
+                    <img src=<%= src[0] %> title="<%= personaName %>'s profile picture">
+                <% }%>
+            </div>
+            <div>
+                <h2><%= personaName %></h2>
+                <a href="https://steamcommunity.com/profiles/<%= steamID64 %>"><%= steamID64 %></a>
             </div>
         </div>
         <table>
-            <th colspan="2">player's stats</th>
+            <th colspan="2">stats</th>
             <tr>
                 <td>kills</td>
                 <td><%= kills.total %></td>
             </tr>
             <tr>
                 <td>headshots</td>
-                <td><%= kills.headshot %></td>
+                <td><%= kills.headshots %></td>
             </tr>
             <tr>
                 <td>stalker kills</td>

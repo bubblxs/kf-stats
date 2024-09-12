@@ -3,17 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>kf stats - Error</title>
+    <title>kf stats - error</title>
 </head>
 <style>
     body{
+        display: flex;
         height: 100vh;
+        max-height: 100vh;
+        overflow: hidden;
         background-color: black;
         color: white;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        font-family: monospace, sans-serif;
+    }
+    a{
+        color: red;
+        font-size: 18px;
     }
 </style>
 <body>
-    <h3><%= error %></h3>
+    <h1><%= error %></h1>
     <a href="/">go back</a>
 </body>
 </html>

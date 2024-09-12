@@ -5,7 +5,7 @@ export const parseSteamId = (sid) => {
 
     sid = sid.trim();
 
-    const onlyRegularCharsRegex = new RegExp(/^[a-zA-Z0-9]*$/gim);
+    const regularCharsRegex = new RegExp(/^[a-zA-Z0-9]*$/gim);
     const steamVanityUrlRegex = new RegExp(/^((http|https):\/\/)?(steamcommunity.com\/)(id)(\/)(.*?)(\/)?$/gim);
     const steamU64UrlRegex = new RegExp(/^((http|https):\/\/)?(steamcommunity.com\/)(profiles)(\/)\d{17}(\/)?$/gim);
     const steamUrlRegex = new RegExp(/^((http|https):\/\/)?(steamcommunity.com\/)(id|profiles)(\/)(.*?)|(\/)?$/gim);
@@ -17,7 +17,7 @@ export const parseSteamId = (sid) => {
     } else if (steamVanityUrlRegex.test(sid)) {
         return `id/${sid.replace(steamUrlRegex, "").split("/")[0]}`;
 
-    } else if (onlyRegularCharsRegex.test(sid)) {
+    } else if (regularCharsRegex.test(sid)) {
         return `id/${sid}`;
 
     } else {

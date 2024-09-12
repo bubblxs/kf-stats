@@ -2,35 +2,33 @@ import helmet from "helmet";
 import express from "express";
 import compression from "compression";
 import { resolve } from "node:path";
+import { load } from "cheerio";
 import { XMLParser } from "fast-xml-parser";
 
 import { parseSteamId } from "./utils.js";
 
-const app = express();
+const fetchAvatar = async (steamid) => {
+    const url = new URL("https://steamcommunity.com");
+    url.pathname = steamid;
 
-app.use(helmet());
-app.use(compression());
-app.use(express.json());
-app.set("view engine", "ejs");
-app.set("views", resolve("src", "views"));
-app.use("/static", express.static(resolve("src", "public")));
+    return fetch(url).then(response => {
+        return response.text();
+    }).then(response => {
+        const src = [];
+        const $ = load(response);
+        const personaName = $("span.actual_persona_name").text();
 
-app.get("/", (req, res) => {
-    res.render("index");
-});
+        $("div.playerAvatarAutoSizeInner").find("img").each((_, el) => src.push(el.attribs.src));
 
-app.get("/player/:sid", (req, res) => {
-    const { sid } = req.params ?? null;
-    const steamid = parseSteamId(encodeURIComponent(sid));
+        return { personaName, src };
+    });
+};
 
-    if (!steamid) {
-        return res.status(400).render("error", { error: "bad request" });
-    }
-
+const fetchStats = async (steamid) => {
     const url = new URL("https://steamcommunity.com");
     url.pathname = `${steamid}/statsfeed/1250`;
 
-    fetch(url)
+    return fetch(url)
         .then((response) => {
             if (!response.headers.get("content-type")?.startsWith("text/xml") || !response.clone().text()) {
                 throw Error("profile not found");
@@ -86,18 +84,56 @@ app.get("/player/:sid", (req, res) => {
                     support: stats.get("supportprestige"),
                     sharpshooter: stats.get("sharpshooterprestige"),
                     commando: stats.get("commandoprestige"),
-                    berserker: stats.get("bersekerprestige"),
+                    berserker: stats.get("berserkerprestige"),
                     firebug: stats.get("firebugprestige"),
                     demo: stats.get("demoprestige")
                 }
             };
 
-            res.render("profile", profile);
-        })
-        .catch((err) => {
-            console.log(err.message);
-            res.render("error", { error: err.message });
+            return profile;
         });
+};
+const app = express();
+
+app.use(helmet({
+    contentSecurityPolicy: {
+        directives: {
+            "default-src": [
+                "'self'"
+            ],
+            "img-src": [
+                "'self'",
+                "https://*.steamstatic.com"
+            ]
+        }
+    }
+}));
+app.use(compression());
+app.use(express.json());
+app.set("view engine", "ejs");
+app.set("views", resolve("src", "views"));
+app.use("/static", express.static(resolve("src", "public")));
+
+app.get("/", (req, res) => {
+    res.render("index");
+});
+
+app.get("/player/:sid", (req, res) => {
+    const { sid } = req.params ?? null;
+    const steamid = parseSteamId(encodeURIComponent(sid));
+
+    if (!steamid) {
+        return res.status(400).render("error", { error: "bad request" });
+    }
+
+    Promise.all([fetchStats(steamid), fetchAvatar(steamid)]).then((response) => {
+        const [stats, avatar] = response;
+
+        res.render("profile", { ...stats, ...avatar });
+    }).catch((err) => {
+        console.log(err.message);
+        res.render("error", { error: err.message ?? "steam's fault" });
+    });
 });
 
 app.all("*", (req, res) => {
