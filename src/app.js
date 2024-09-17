@@ -7,23 +7,22 @@ import { XMLParser } from "fast-xml-parser";
 
 import { parseSteamId } from "./utils.js";
 
-const fetchAvatar = async (steamid) => {
+const fetchProfile = async (steamid) => {
     const url = new URL("https://steamcommunity.com");
     url.pathname = steamid;
 
-    return fetch(url).then(response => {
+    return fetch(url).then((response) => {
         return response.text();
-    }).then(response => {
-        const src = [];
+    }).then((response) => {
+        const avatars = [];
         const $ = load(response);
         const personaName = $("span.actual_persona_name").text();
 
-        $("div.playerAvatarAutoSizeInner").find("img").each((_, el) => src.push(el.attribs.src));
+        $("div.playerAvatarAutoSizeInner").find("img").each((_, el) => avatars.push(el.attribs.src));
 
-        return { personaName, src };
+        return { personaName, src: avatars };
     });
 };
-
 const fetchStats = async (steamid) => {
     const url = new URL("https://steamcommunity.com");
     url.pathname = `${steamid}/statsfeed/1250`;
@@ -126,10 +125,10 @@ app.get("/player/:sid", (req, res) => {
         return res.status(400).render("error", { error: "bad request" });
     }
 
-    Promise.all([fetchStats(steamid), fetchAvatar(steamid)]).then((response) => {
-        const [stats, avatar] = response;
+    Promise.all([fetchStats(steamid), fetchProfile(steamid)]).then((response) => {
+        const [stats, profile] = response;
 
-        res.render("profile", { ...stats, ...avatar });
+        res.render("profile", { ...stats, ...profile });
     }).catch((err) => {
         console.log(err.message);
         res.render("error", { error: err.message ?? "steam's fault" });
@@ -142,7 +141,7 @@ app.all("*", (req, res) => {
 
 app.use((err, req, res, next) => {
     console.log(err.message);
-    res.status(404).render("error", { error: "hey" });
+    res.status(404).render("error", { error: "you're not supposed to be here" });
 });
 
 app.listen(4242, () => console.log("running on ::4242"));

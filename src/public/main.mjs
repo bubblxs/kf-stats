@@ -25,13 +25,12 @@ const parseSteamId = (sid) => {
     }
 }
 
-
 window.addEventListener("DOMContentLoaded", () => {
     const form = document.getElementsByClassName("form")[0];
 
     form.addEventListener("submit", (event) => {
         event.preventDefault();
-
+        
         const steamid = parseSteamId(document.getElementsByClassName("steamid")[0].value);
 
         if (!steamid) {
@@ -43,18 +42,23 @@ window.addEventListener("DOMContentLoaded", () => {
 
             const table = document.getElementsByTagName("table")[0];
             const span = document.createElement("span");
+            span.className = "error";
             span.textContent = "invalid steamid";
-            span.classList.add("error");
+            span.style.padding = "5px";
+            span.style.backgroundColor = "#ff5f5f6b";
+            span.style.border = "solid 1px red";
+            span.style.textAlign = "center";
+            span.style.marginBlock = "5px";
+            span.style.color = "#fff";
+            span.style.fontWeight = "bold";
 
             table.after(span)
 
             setTimeout(() => {
                 span.remove();
             }, 3000);
-
         } else {
             window.location.href = `player/${steamid}`;
         }
     });
-
 });

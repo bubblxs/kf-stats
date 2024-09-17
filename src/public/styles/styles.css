@@ -16,7 +16,7 @@ body {
 
 main {
     width: 100%;
-    background-image: linear-gradient(to bottom right, black, rgb(19, 0, 0));
+    background-image: linear-gradient(to bottom right, #000, #130000);
 }
 
 main>div {
@@ -33,10 +33,10 @@ form {
 
 input[type=text] {
     flex: 1;
-    background-color: black;
+    background-color: #000;
     border: solid rgb(63, 63, 63) 2px;
     border-radius: 5px;
-    color: white;
+    color: #fff;
     padding-inline: 10px;
 }
 
@@ -47,7 +47,7 @@ input[type=text]:focus {
 td,
 tr,
 th {
-    color: white;
+    color: #fff;
     padding: 10px;
     border: solid rgb(63, 63, 63) 2px;
     border-radius: 5px;
@@ -58,23 +58,12 @@ button {
     padding: 5px;
     margin-left: 10px;
     font-weight: bold;
-    background-color: white;
-    border: solid rgb(63, 63, 63) 2px;
+    background-color: #fff;
+    border: solid #3f3f3f 2px;
     border-radius: 5px;
 }
 
 button:hover {
     cursor: pointer;
     opacity: 50%;
-}
-
-/* XD */
-.error {
-    padding: 5px;
-    background-color: #ff5f5f6b;
-    border: solid 1px red;
-    text-align: center;
-    margin-block: 5px;
-    color: white;
-    font-weight: bold;
 }
