@@ -1,4 +1,4 @@
-<h1 align="center">kf stats</h1>
+<h2 align="center">kf stats</h2>
 
 > retrieve and display Killing Floor player statistics
 
