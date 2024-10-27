@@ -1,8 +1,8 @@
 import helmet from "helmet";
 import express from "express";
 import compression from "compression";
-import { resolve } from "node:path";
 import { load } from "cheerio";
+import { resolve } from "node:path";
 import { XMLParser } from "fast-xml-parser";
 
 import { parseSteamId } from "./utils.js";
@@ -18,7 +18,9 @@ const fetchProfile = async (steamid) => {
         const $ = load(response);
         const personaName = $("span.actual_persona_name").text();
 
-        $("div.playerAvatarAutoSizeInner").find("img").each((_, el) => avatars.push(el.attribs.src));
+        $("div.playerAvatarAutoSizeInner").find("img").each((_, el) => {
+            avatars.push(el.attribs.src);
+        });
 
         return { personaName, src: avatars };
     });
@@ -63,7 +65,7 @@ const fetchStats = async (steamid) => {
                 stats.set(APIName, value);
             }
 
-            const profile = {
+            return {
                 steamID64,
                 kills: {
                     total: stats.get("kills"),
@@ -88,8 +90,6 @@ const fetchStats = async (steamid) => {
                     demo: stats.get("demoprestige")
                 }
             };
-
-            return profile;
         });
 };
 const app = express();

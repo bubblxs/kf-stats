@@ -5,24 +5,26 @@ export const parseSteamId = (sid) => {
 
     sid = sid.trim();
 
-    const regularCharsRegex = new RegExp(/^[a-zA-Z0-9]*$/gim);
-    const steamVanityUrlRegex = new RegExp(/^((http|https):\/\/)?(steamcommunity.com\/)(id)(\/)(.*?)(\/)?$/gim);
-    const steamU64UrlRegex = new RegExp(/^((http|https):\/\/)?(steamcommunity.com\/)(profiles)(\/)\d{17}(\/)?$/gim);
-    const steamUrlRegex = new RegExp(/^((http|https):\/\/)?(steamcommunity.com\/)(id|profiles)(\/)(.*?)|(\/)?$/gim);
-    const steamU64Regex = new RegExp(/^7656\d{13}$/gim);
+    const regularCharsRegex = /^[a-zA-Z0-9]+$/;
+    const steamVanityUrlRegex = /^(?:https?:\/\/)?steamcommunity\.com\/id\/([^\/]+)(?:\/)?$/;
+    const steamU64UrlRegex = /^(?:https?:\/\/)?steamcommunity\.com\/profiles\/(\d{17})(?:\/)?$/;
+    const steamU64Regex = /^7656\d{13}$/;
 
-    if (steamU64UrlRegex.test(sid) || steamU64Regex.test(sid)) {
-        return `profiles/${sid.replace(steamUrlRegex, "").split("/")[0]}`;
-
-    } else if (steamVanityUrlRegex.test(sid)) {
-        return `id/${sid.replace(steamUrlRegex, "").split("/")[0]}`;
-
-    } else if (regularCharsRegex.test(sid)) {
-        return `id/${sid}`;
-
-    } else {
-        return null;
+    const u64Match = sid.match(steamU64UrlRegex);
+    if (u64Match || steamU64Regex.test(sid)) {
+        return `profiles/${u64Match ? u64Match[1] : sid}`;
     }
-}
+
+    const vanityMatch = sid.match(steamVanityUrlRegex);
+    if (vanityMatch) {
+        return `id/${vanityMatch[1]}`;
+    }
+
+    if (regularCharsRegex.test(sid)) {
+        return `id/${sid}`;
+    }
+
+    return null;
+};
 
 export const sayIt = () => "no";

@@ -5,58 +5,57 @@ const parseSteamId = (sid) => {
 
     sid = sid.trim();
 
-    const regularCharsRegex = new RegExp(/^[a-zA-Z0-9]*$/gim);
-    const steamVanityUrlRegex = new RegExp(/^((http|https):\/\/)?(steamcommunity.com\/)(id)(\/)(.*?)(\/)?$/gim);
-    const steamU64UrlRegex = new RegExp(/^((http|https):\/\/)?(steamcommunity.com\/)(profiles)(\/)\d{17}(\/)?$/gim);
-    const steamUrlRegex = new RegExp(/^((http|https):\/\/)?(steamcommunity.com\/)(id|profiles)(\/)(.*?)|(\/)?$/gim);
-    const steamU64Regex = new RegExp(/^7656\d{13}$/gim);
+    const regularCharsRegex = /^[a-zA-Z0-9]+$/;
+    const steamVanityUrlRegex = /^(?:https?:\/\/)?steamcommunity\.com\/id\/([^\/]+)(?:\/)?$/;
+    const steamU64UrlRegex = /^(?:https?:\/\/)?steamcommunity\.com\/profiles\/(\d{17})(?:\/)?$/;
+    const steamU64Regex = /^7656\d{13}$/;
 
-    if (steamU64UrlRegex.test(sid) || steamU64Regex.test(sid)) {
-        return sid.replace(steamUrlRegex, "").split("/")[0];
-
-    } else if (steamVanityUrlRegex.test(sid)) {
-        return sid.replace(steamUrlRegex, "").split("/")[0];
-
-    } else if (regularCharsRegex.test(sid)) {
-        return sid;
-
-    } else {
-        return null;
+    const u64Match = sid.match(steamU64UrlRegex);
+    if (u64Match || steamU64Regex.test(sid)) {
+        return u64Match ? u64Match[1] : sid;
     }
+
+    const vanityMatch = sid.match(steamVanityUrlRegex);
+    if (vanityMatch) {
+        return vanityMatch[1];
+    }
+
+    if (regularCharsRegex.test(sid)) {
+        return sid;
+    }
+
+    return null;
 }
 
 window.addEventListener("DOMContentLoaded", () => {
-    const form = document.getElementsByClassName("form")[0];
+    const form = document.querySelector("form");
 
     form.addEventListener("submit", (event) => {
         event.preventDefault();
-        
-        const steamid = parseSteamId(document.getElementsByClassName("steamid")[0].value);
+
+        const steamid = parseSteamId(document.querySelector(".steamid").value);
 
         if (!steamid) {
-            const error = document.getElementsByClassName("error")[0];
+            const error = document.querySelector(".error");
 
-            if (error) {
-                return;
-            }
+            if (error) return;
 
-            const table = document.getElementsByTagName("table")[0];
+            const table = document.querySelector("table");
             const span = document.createElement("span");
             span.className = "error";
-            span.textContent = "invalid steamid";
-            span.style.padding = "5px";
-            span.style.backgroundColor = "#ff5f5f6b";
-            span.style.border = "solid 1px red";
-            span.style.textAlign = "center";
-            span.style.marginBlock = "5px";
             span.style.color = "#fff";
+            span.style.border = "solid 1px #ff";
+            span.style.padding = "5px";
+            span.style.textAlign = "center";
             span.style.fontWeight = "bold";
+            span.style.marginBlock = "5px";
+            span.style.backgroundColor = "#ff5f5f6b";
+            span.textContent = "invalid steamid";
 
             table.after(span)
 
-            setTimeout(() => {
-                span.remove();
-            }, 3000);
+            setTimeout(() => { span.remove(); }, 3000);
+
         } else {
             window.location.href = `player/${steamid}`;
         }
