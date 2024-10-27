@@ -1,6 +1,6 @@
 <h2 align="center">kf stats</h2>
 
-> retrieve and display Killing Floor player statistics
+> retrieve and display Killing Floor player statistics.
 
 ### requirements
 
