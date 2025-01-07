@@ -13,6 +13,7 @@ const fetchProfile = async (steamid) => {
 
     return fetch(url).then((response) => {
         return response.text();
+
     }).then((response) => {
         const avatars = [];
         const $ = load(response);
@@ -29,68 +30,67 @@ const fetchStats = async (steamid) => {
     const url = new URL("https://steamcommunity.com");
     url.pathname = `${steamid}/statsfeed/1250`;
 
-    return fetch(url)
-        .then((response) => {
-            if (!response.headers.get("content-type")?.startsWith("text/xml") || !response.clone().text()) {
-                throw Error("profile not found");
+    return fetch(url).then((response) => {
+        if (!response.headers.get("content-type")?.startsWith("text/xml") || !response.clone().text()) {
+            throw Error("profile not found");
+        }
+
+        return response.text();
+
+    }).then((response) => {
+        const xml = new XMLParser().parse(response);
+
+        if (!xml.statsfeed || xml.statsfeed.error) {
+            throw Error(xml.statsfeed.error ?? "profile not found");
+        }
+
+        const stats = new Map();
+        const achievements = new Map();
+        const { steamID64 } = xml.statsfeed;
+
+        let numAchievementsCompleted = 0;
+        for (let i = 0, l = xml.statsfeed.achievements.item.length; i < l; i++) {
+            const { APIName, value } = xml.statsfeed.achievements.item[i];
+
+            achievements.set(APIName, value);
+
+            if (value !== 0) {
+                numAchievementsCompleted++;
             }
+        }
 
-            return response.text()
-        })
-        .then((response) => {
-            const xml = new XMLParser().parse(response);
+        for (let i = 0, l = xml.statsfeed.stats.item.length; i < l; i++) {
+            const { APIName, value } = xml.statsfeed.stats.item[i];
 
-            if (!xml.statsfeed || xml.statsfeed.error) {
-                throw Error(xml.statsfeed.error ?? "profile not found");
+            stats.set(APIName, value);
+        }
+
+        return {
+            steamID64,
+            kills: {
+                total: stats.get("kills"),
+                headshots: stats.get("headshotkills"),
+                stalker: stats.get("stalkerkills"),
+                bloat: stats.get("bloatkills"),
+                siren: stats.get("sirenkills"),
+            },
+            damageHealed: stats.get("damagehealed"),
+            totalAchievements: achievements.size,
+            numAchievementsCompleted,
+            soleSurvivorWaves: achievements.get("solesurvivorwaves"),
+            totalZedTime: stats.get("totalzedtime"),
+            weldingPoints: stats.get("weldingpoints"),
+            prestige: {
+                medic: stats.get("medicprestige"),
+                support: stats.get("supportprestige"),
+                sharpshooter: stats.get("sharpshooterprestige"),
+                commando: stats.get("commandoprestige"),
+                berserker: stats.get("berserkerprestige"),
+                firebug: stats.get("firebugprestige"),
+                demo: stats.get("demoprestige")
             }
-
-            const stats = new Map();
-            const achievements = new Map();
-            const { steamID64 } = xml.statsfeed;
-
-            let numAchievementsCompleted = 0;
-            for (let i = 0, l = xml.statsfeed.achievements.item.length; i < l; i++) {
-                const { APIName, value } = xml.statsfeed.achievements.item[i];
-
-                achievements.set(APIName, value);
-
-                if (value !== 0) {
-                    numAchievementsCompleted++;
-                }
-            }
-
-            for (let i = 0, l = xml.statsfeed.stats.item.length; i < l; i++) {
-                const { APIName, value } = xml.statsfeed.stats.item[i];
-
-                stats.set(APIName, value);
-            }
-
-            return {
-                steamID64,
-                kills: {
-                    total: stats.get("kills"),
-                    headshots: stats.get("headshotkills"),
-                    stalker: stats.get("stalkerkills"),
-                    bloat: stats.get("bloatkills"),
-                    siren: stats.get("sirenkills"),
-                },
-                damageHealed: stats.get("damagehealed"),
-                totalAchievements: achievements.size,
-                numAchievementsCompleted,
-                soleSurvivorWaves: achievements.get("solesurvivorwaves"),
-                totalZedTime: stats.get("totalzedtime"),
-                weldingPoints: stats.get("weldingpoints"),
-                prestige: {
-                    medic: stats.get("medicprestige"),
-                    support: stats.get("supportprestige"),
-                    sharpshooter: stats.get("sharpshooterprestige"),
-                    commando: stats.get("commandoprestige"),
-                    berserker: stats.get("berserkerprestige"),
-                    firebug: stats.get("firebugprestige"),
-                    demo: stats.get("demoprestige")
-                }
-            };
-        });
+        };
+    });
 };
 const app = express();
 
