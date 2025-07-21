@@ -2,7 +2,7 @@
 
 > retrieve and display Killing Floor player statistics.
 
-![](https://github.com/bubblxs/kf-stats/blob/main/.github/kfstats_demo.webm)
+[github_kfstats_demo.webm](https://github.com/user-attachments/assets/cc8527b3-fa6c-4c03-8c5e-3fb667f837fe)
 
 ### requirements
 
