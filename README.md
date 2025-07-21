@@ -2,6 +2,8 @@
 
 > retrieve and display Killing Floor player statistics.
 
+![](https://github.com/bubblxs/kf-stats/blob/main/.github/kfstats_demo.webm)
+
 ### requirements
 
 - Node.js version 20.x or later.
