@@ -1,68 +1,68 @@
 /* we do not use classes here, m8 */
 * {
-    box-sizing: border-box;
-    padding: 0;
-    margin: 0;
-    font-family: monospace, sans-serif;
+        box-sizing: border-box;
+        padding: 0;
+        margin: 0;
+        font-family: monospace, sans-serif;
 }
 
 body {
-    display: grid;
-    grid-template-columns: 1fr;
-    grid-template-rows: 5% 1fr 8%;
-    height: 100vh;
-    max-height: 100vh;
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: 5% 1fr 8%;
+        height: 100vh;
+        max-height: 100vh;
 }
 
 main {
-    width: 100%;
-    background-image: linear-gradient(to bottom right, #000, rgb(19, 0, 0));
+        width: 100%;
+        background-image: linear-gradient(to bottom right, #000, rgb(19, 0, 0));
 }
 
 main>div {
-    display: flex;
-    flex-direction: row;
-    width: 40%;
-    padding-block: 20px;
-    margin: auto;
-    background-color: #000;
-    margin-top: 10px;
-    border: solid rgb(63, 63, 63) 2px;
+        display: flex;
+        flex-direction: row;
+        width: 40%;
+        padding-block: 20px;
+        margin: auto;
+        background-color: #000;
+        margin-top: 10px;
+        border: solid rgb(63, 63, 63) 2px;
 }
 
 main>div>div>h2 {
-    margin-top: 20px;
-    margin-bottom: 10px;
-    color: #fff;
+        margin-top: 20px;
+        margin-bottom: 10px;
+        color: #fff;
 }
 
-main>div>div>a{
-    text-decoration: underline;
-    color: #ff0000;
+main>div>div>a {
+        text-decoration: underline;
+        color: #ff0000;
 }
 
 main>table {
-    width: 40%;
-    margin: auto;
-    padding-block: 20px;
+        width: 40%;
+        margin: auto;
+        padding-block: 20px;
 }
 
 main>div>div>img {
-    background-repeat: no-repeat;
-    background-size: 180px 180px;
-    background-position: center;
+        background-repeat: no-repeat;
+        background-size: 180px 180px;
+        background-position: center;
 }
 
 main>div>div {
-    padding-inline: 10px;
+        padding-inline: 10px;
 }
 
 td,
 tr,
 th {
-    color: #fff;
-    padding: 10px;
-    border: solid #3f3f3f 2px;
-    border-radius: 5px;
-    background-color: #000;
+        color: #fff;
+        padding: 10px;
+        border: solid #3f3f3f 2px;
+        border-radius: 5px;
+        background-color: #000;
 }

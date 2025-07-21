@@ -7,105 +7,105 @@ import { XMLParser } from "fast-xml-parser";
 
 import { parseSteamId } from "./utils.js";
 
-const fetchProfile = async (steamid) => {
-    const url = new URL("https://steamcommunity.com");
-    url.pathname = steamid;
+const fetchProfile = async (steamPathname) => {
+        const url = new URL("https://steamcommunity.com");
+        url.pathname = steamPathname;
 
-    return fetch(url).then((response) => {
-        return response.text();
+        return fetch(url).then((response) => {
+                return response.text();
 
-    }).then((response) => {
-        const avatars = [];
-        const $ = load(response);
-        const personaName = $("span.actual_persona_name").text();
+        }).then((response) => {
+                const avatars = [];
+                const $ = load(response);
+                const personaName = $("span.actual_persona_name").text();
 
-        $("div.playerAvatarAutoSizeInner").find("img").each((_, el) => {
-            avatars.push(el.attribs.src);
+                $("div.playerAvatarAutoSizeInner").find("img").each((_, el) => {
+                        avatars.push(el.attribs.src);
+                });
+
+                return { personaName, src: avatars };
         });
-
-        return { personaName, src: avatars };
-    });
 };
-const fetchStats = async (steamid) => {
-    const url = new URL("https://steamcommunity.com");
-    url.pathname = `${steamid}/statsfeed/1250`;
+const fetchStats = async (steamPathname) => {
+        const url = new URL("https://steamcommunity.com");
+        url.pathname = `${steamPathname}/statsfeed/1250`;
 
-    return fetch(url).then((response) => {
-        if (!response.headers.get("content-type")?.startsWith("text/xml") || !response.clone().text()) {
-            throw Error("profile not found");
-        }
+        return fetch(url).then((response) => {
+                if (!response.headers.get("content-type")?.startsWith("text/xml")) {
+                        throw Error("profile not found");
+                }
 
-        return response.text();
+                return response.text();
 
-    }).then((response) => {
-        const xml = new XMLParser().parse(response);
+        }).then((response) => {
+                const xml = new XMLParser().parse(response);
 
-        if (!xml.statsfeed || xml.statsfeed.error) {
-            throw Error(xml.statsfeed.error ?? "profile not found");
-        }
+                if (!xml.statsfeed || xml.statsfeed.error) {
+                        throw Error(xml.statsfeed.error ?? "profile not found");
+                }
 
-        const stats = new Map();
-        const achievements = new Map();
-        const { steamID64 } = xml.statsfeed;
+                const stats = new Map();
+                const achievements = new Map();
+                const { steamID64 } = xml.statsfeed;
 
-        let numAchievementsCompleted = 0;
-        for (let i = 0, l = xml.statsfeed.achievements.item.length; i < l; i++) {
-            const { APIName, value } = xml.statsfeed.achievements.item[i];
+                let numAchievementsCompleted = 0;
+                for (let i = 0, l = xml.statsfeed.achievements.item.length; i < l; i++) {
+                        const { APIName, value } = xml.statsfeed.achievements.item[i];
 
-            achievements.set(APIName, value);
+                        achievements.set(APIName, value);
 
-            if (value !== 0) {
-                numAchievementsCompleted++;
-            }
-        }
+                        if (value !== 0) {
+                                numAchievementsCompleted++;
+                        }
+                }
 
-        for (let i = 0, l = xml.statsfeed.stats.item.length; i < l; i++) {
-            const { APIName, value } = xml.statsfeed.stats.item[i];
+                for (let i = 0, l = xml.statsfeed.stats.item.length; i < l; i++) {
+                        const { APIName, value } = xml.statsfeed.stats.item[i];
 
-            stats.set(APIName, value);
-        }
+                        stats.set(APIName, value);
+                }
 
-        return {
-            steamID64,
-            kills: {
-                total: stats.get("kills"),
-                headshots: stats.get("headshotkills"),
-                stalker: stats.get("stalkerkills"),
-                bloat: stats.get("bloatkills"),
-                siren: stats.get("sirenkills"),
-            },
-            damageHealed: stats.get("damagehealed"),
-            totalAchievements: achievements.size,
-            numAchievementsCompleted,
-            soleSurvivorWaves: achievements.get("solesurvivorwaves"),
-            totalZedTime: stats.get("totalzedtime"),
-            weldingPoints: stats.get("weldingpoints"),
-            prestige: {
-                medic: stats.get("medicprestige"),
-                support: stats.get("supportprestige"),
-                sharpshooter: stats.get("sharpshooterprestige"),
-                commando: stats.get("commandoprestige"),
-                berserker: stats.get("berserkerprestige"),
-                firebug: stats.get("firebugprestige"),
-                demo: stats.get("demoprestige")
-            }
-        };
-    });
+                return {
+                        steamID64,
+                        kills: {
+                                total: stats.get("kills"),
+                                headshots: stats.get("headshotkills"),
+                                stalker: stats.get("stalkerkills"),
+                                bloat: stats.get("bloatkills"),
+                                siren: stats.get("sirenkills"),
+                        },
+                        damageHealed: stats.get("damagehealed"),
+                        totalAchievements: achievements.size,
+                        numAchievementsCompleted,
+                        soleSurvivorWaves: achievements.get("solesurvivorwaves"),
+                        totalZedTime: stats.get("totalzedtime"),
+                        weldingPoints: stats.get("weldingpoints"),
+                        prestige: {
+                                medic: stats.get("medicprestige"),
+                                support: stats.get("supportprestige"),
+                                sharpshooter: stats.get("sharpshooterprestige"),
+                                commando: stats.get("commandoprestige"),
+                                berserker: stats.get("berserkerprestige"),
+                                firebug: stats.get("firebugprestige"),
+                                demo: stats.get("demoprestige")
+                        }
+                };
+        });
 };
 const app = express();
 
 app.use(helmet({
-    contentSecurityPolicy: {
-        directives: {
-            "default-src": [
-                "'self'"
-            ],
-            "img-src": [
-                "'self'",
-                "https://*.steamstatic.com"
-            ]
+        contentSecurityPolicy: {
+                directives: {
+                        "default-src": [
+                                "'self'"
+                        ],
+                        "img-src": [
+                                "'self'",
+                                "https://*.steamstatic.com"
+                        ]
+                }
         }
-    }
 }));
 app.use(compression());
 app.use(express.json());
@@ -114,34 +114,34 @@ app.set("views", resolve("src", "views"));
 app.use("/static", express.static(resolve("src", "public")));
 
 app.get("/", (req, res) => {
-    res.render("index");
+        res.render("index");
 });
 
 app.get("/player/:sid", (req, res) => {
-    const { sid } = req.params ?? null;
-    const steamid = parseSteamId(encodeURIComponent(sid));
+        const { sid } = req.params ?? null;
+        const steamid = parseSteamId(encodeURIComponent(sid));
 
-    if (!steamid) {
-        return res.status(400).render("error", { error: "bad request" });
-    }
+        if (!steamid) {
+                return res.status(400).render("error", { error: "bad request" });
+        }
 
-    Promise.all([fetchStats(steamid), fetchProfile(steamid)]).then((response) => {
-        const [stats, profile] = response;
+        Promise.all([fetchStats(steamid), fetchProfile(steamid)]).then((response) => {
+                const [stats, profile] = response;
 
-        res.render("profile", { ...stats, ...profile });
-    }).catch((err) => {
-        console.log(err.message);
-        res.render("error", { error: err.message ?? "steam's fault" });
-    });
+                res.render("profile", { ...stats, ...profile });
+        }).catch((err) => {
+                console.log(err.message);
+                res.render("error", { error: err.message ?? "steam's fault" });
+        });
 });
 
 app.all("*", (req, res) => {
-    res.status(404).render("error", { error: "kinda lost, huh?" });
+        res.status(404).render("error", { error: "kinda lost, huh?" });
 });
 
 app.use((err, req, res, next) => {
-    console.log(err.message);
-    res.status(404).render("error", { error: "you're not supposed to be here" });
+        console.log(err.message);
+        res.status(404).render("error", { error: "you're not supposed to be here" });
 });
 
 app.listen(4242, () => console.log("running on ::4242"));

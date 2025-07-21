@@ -1,69 +1,69 @@
 /* classes? what the fuck is a class? */
 * {
-    box-sizing: border-box;
-    padding: 0;
-    margin: 0;
-    font-family: monospace, sans-serif;
+        box-sizing: border-box;
+        padding: 0;
+        margin: 0;
+        font-family: monospace, sans-serif;
 }
 
 body {
-    display: grid;
-    grid-template-columns: 1fr;
-    grid-template-rows: 5% 1fr 8%;
-    height: 100vh;
-    max-height: 100vh;
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: 5% 1fr 8%;
+        height: 100vh;
+        max-height: 100vh;
 }
 
 main {
-    width: 100%;
-    background-image: linear-gradient(to bottom right, #000, #130000);
+        width: 100%;
+        background-image: linear-gradient(to bottom right, #000, #130000);
 }
 
 main>div {
-    display: flex;
-    flex-direction: column;
-    width: 40%;
-    margin: auto;
+        display: flex;
+        flex-direction: column;
+        width: 40%;
+        margin: auto;
 }
 
 form {
-    display: flex;
-    padding-block: 20px;
+        display: flex;
+        padding-block: 20px;
 }
 
 input[type=text] {
-    flex: 1;
-    background-color: #000;
-    border: solid rgb(63, 63, 63) 2px;
-    border-radius: 5px;
-    color: #fff;
-    padding-inline: 10px;
+        flex: 1;
+        background-color: #000;
+        border: solid rgb(63, 63, 63) 2px;
+        border-radius: 5px;
+        color: #fff;
+        padding-inline: 10px;
 }
 
 input[type=text]:focus {
-    outline: none;
+        outline: none;
 }
 
 td,
 tr,
 th {
-    color: #fff;
-    padding: 10px;
-    border: solid rgb(63, 63, 63) 2px;
-    border-radius: 5px;
-    background-color: black;
+        color: #fff;
+        padding: 10px;
+        border: solid rgb(63, 63, 63) 2px;
+        border-radius: 5px;
+        background-color: black;
 }
 
 button {
-    padding: 5px;
-    margin-left: 10px;
-    font-weight: bold;
-    background-color: #fff;
-    border: solid #3f3f3f 2px;
-    border-radius: 5px;
+        padding: 5px;
+        margin-left: 10px;
+        font-weight: bold;
+        background-color: #fff;
+        border: solid #3f3f3f 2px;
+        border-radius: 5px;
 }
 
 button:hover {
-    cursor: pointer;
-    opacity: 50%;
+        cursor: pointer;
+        opacity: 50%;
 }
